@@ -12,9 +12,6 @@ configurations.all {
         force "com.android.support:support-v4:${SupportLibVersion}"
     }
 }
-def keystorePropertiesFile = rootProject.file("key.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion versions.compile
