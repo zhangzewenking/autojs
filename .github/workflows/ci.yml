@@ -15,30 +15,18 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
-    name: Build
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-        qt_target: [android]
-        qt_arch: [android_x86,android_armv7,android_arm64_v8a]
+  apk:
+    runs-on: ubuntu-18.04
     steps:
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2.10.0
-        with:
-          # Version of Qt to install
-          version: 1.0
-          # Target platform for build
-          target: ${{ matrix.qt_target }}
-          # Architecture for Windows/Android
-          arch: ${{ matrix.qt_arch }}  
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-      - name: build android
-        run: |
-          export ANDROID_SDK_ROOT=$ANDROID_HOME
-          export ANDROID_NDK_ROOT=$ANDROID_HOME/ndk-bundle
-          qmake
-          make
+    - uses: actions/checkout@v1
+    - name: set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Build Release APK
+      run: bash ./gradlew assembleRelease
+    - name: Upload APK
+      uses: actions/upload-artifact@v1
+      with:
+        name: app
+        path: app/build/outputs/apk/release/app-release.apk
